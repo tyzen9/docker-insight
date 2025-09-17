@@ -1,0 +1,101 @@
+name: monitoring
+
+# *****************************************************************************
+# diun
+#   Diun (Docker Image Update Notifier) is a lightweight, self-hosted service 
+#   that monitors your Docker images and sends notifications whenever updates 
+#   are available. It helps keep environments secure and up to date by 
+#   integrating with registries and notification providers such as email, 
+#   Slack, Gotify, and more. Designed to run alongside your Docker services, 
+#   Diun ensures you are always aware of new image versions so you can quickly 
+#   apply updates while maintaining control of your deployment lifecycle.
+#
+# *****************************************************************************
+services:
+  diun:
+    image: crazymax/diun:latest
+    container_name: diun
+    command: serve
+    volumes:
+      - data:/data
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - TZ=${TZ_ID}
+      - LOG_LEVEL=info
+      - LOG_JSON=false
+      - DIUN_WATCH_WORKERS=20
+      - DIUN_WATCH_SCHEDULE=0 */6 * * *
+      - DIUN_WATCH_JITTER=30s
+      - DIUN_PROVIDERS_DOCKER=true
+      - DIUN_PROVIDERS_DOCKER_WATCHBYDEFAULT=true
+      # Pushover configuration
+      - DIUN_NOTIF_PUSHOVER_TOKEN=${DUIN_PUSHOVER_APP_API_TOKEN}
+      - DIUN_NOTIF_PUSHOVER_RECIPIENT=${DUIN_PUSHOVER_USER_KEY}
+      - DIUN_NOTIF_PUSHOVER_PRIORITY=0
+    restart: always
+
+
+  # *****************************************************************************
+  # glances
+  #   Glances is a cross-platform, real-time system monitoring tool that provides 
+  #   a comprehensive overview of system metrics such as CPU usage, memory, disk 
+  #   I/O, network activity, and running processes. It is accessible through a 
+  #   web-based interface, CLI, or API, making it versatile for local and remote 
+  #   monitoring. Designed for efficiency and low resource usage, Glances helps 
+  #   users track performance, identify bottlenecks, and maintain system health 
+  #   across servers, containers, and embedded devices. 
+  #
+  # *****************************************************************************
+  glances:
+    image: nicolargo/glances:latest
+    restart: always
+    container_name: glances
+    pid: host
+    network_mode: host
+    security_opt:
+      - apparmor=unconfined
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/os-release:/etc/os-release:ro
+      # This is our custom glances.conf file on the docker host server
+      # !! This file must exist for this container to start successfully !!
+      - /config/glances/glances.conf:/etc/glances/glances.conf
+    environment:
+      - "GLANCES_OPT=-w"
+
+
+  # *****************************************************************************
+  # socket-proxy
+  #   Socket Proxy is a security-enhanced proxy for the Docker socket that 
+  #   restricts and controls access to the Docker API. By filtering Docker 
+  #   socket requests based on configurable rules, it limits the attack surface 
+  #   for containers requiring Docker socket access, such as Traefik or Watchtower. 
+  #   This proxy helps prevent unauthorized or dangerous Docker operations, 
+  #   enhancing container and host security while allowing necessary Docker API 
+  #   communication.
+  #
+  # *****************************************************************************
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:latest
+    container_name: socket-proxy
+    read_only: true
+    tmpfs:
+      - /run
+    environment:
+      - CONTAINERS=1
+      - IMAGES=1
+      - INFO=1
+      - HEALTH=1         # add as needed for health endpoints
+      - EVENTS=1         # optional, for event streaming
+      - PING=1           # recommended
+      - POST=0           # highly recommended for read-only API
+      - LOG_LEVEL=info   # optional
+      - VERSION=1        # recommended
+      - TZ=${TZ_ID}      # optional
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+    network_mode: host
+
+volumes:
+  data:
