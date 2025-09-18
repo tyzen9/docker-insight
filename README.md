@@ -18,9 +18,9 @@ The full list of config options are documented on:
 # What's Inside?
 The docker-insight stack contains everything you need for a robust docker host and container monitoring solution. Here is what this project has to offer:
 
-1. The [Diun](https://crazymax.dev/diun).
-1. The [Glances](https://glances.readthedocs.io/en/latest/docker.html)
-1. The [Socket-Proxy](https://github.com/linuxserver/docker-socket-proxy)
+1. [Diun](https://crazymax.dev/diun)
+1. [Glances](https://glances.readthedocs.io/en/latest/docker.html)
+1. [Socket-Proxy](https://github.com/linuxserver/docker-socket-proxy)
 
 ## Getting Started
 Deploy the stack into your Docker environment. This can be done by cloning this repository, by downloading the most recent [release](https://github.com/tyzen9/docker-insight/releases) .zip file, or just by simply copying the content of the `compose.yml` file and `sample.env` above. 
@@ -34,6 +34,9 @@ docker compose up
 ```
 
 If everything works as expected, you should be able to access Glances at http://hostname:61208.
+
+> [!NOTE]
+>This documentation assumes you have a working knowledge of [Docker](https://www.docker.com/), [Diun](https://crazymax.dev/diun/), and [Glances](https://glances.readthedocs.io/en/latest/) and [Socket-Proxy](https://github.com/linuxserver/docker-socket-proxy).
 
 # Duin 
 Diun (Docker Image Update Notifier) is a lightweight, self-hosted service 
