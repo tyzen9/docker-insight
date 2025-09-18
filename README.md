@@ -23,7 +23,7 @@ The docker-insight stack contains everything you need for a robust docker host a
 1. The [Socket-Proxy](https://github.com/linuxserver/docker-socket-proxy)
 
 ## Getting Started
-Deploy the stack into your Docker environment. This can be done any number of ways, to get started quickly log onto your Docker host system, and clone this repository: `git clone https://github.com/tyzen9/docker-insight.git`
+Deploy the stack into your Docker environment. This can be done by cloning this repository, by downloading the most recent [release](https://github.com/tyzen9/docker-insight/releases) .zip file, or just by simply copying the content of the `compose.yml` file and `sample.env` above. 
 
 1. Make a copy of `sample.env`, and name it `.env`
 1. Set the configuration options as desired in the `compose.yaml` and `.env` files.
