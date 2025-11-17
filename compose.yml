@@ -13,12 +13,12 @@ name: insight
 # *****************************************************************************
 services:
   diun:
-    image: crazymax/diun:4.30
+    image: crazymax/diun:4.30.0
     container_name: diun
     command: serve
     volumes:
       - data:/data
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - TZ=${TZ_ID}
       - LOG_LEVEL=info
@@ -39,9 +39,14 @@ services:
       - DIUN_NOTIF_MQTT_PASSWORD=${MQTT_PASSWORD}  # If needed
       - DIUN_NOTIF_MQTT_TOPIC=diun/${MQTT_CLIENTID}/notify
       - DIUN_NOTIF_MQTT_CLIENT=${MQTT_CLIENTID}
-      - DIUN_NOTIF_MQTT_QOS=${MQTT_QOS:-0}
+      - DIUN_NOTIF_MQTT_QOS=${MQTT_QOS}
     restart: always
-
+    labels:
+      # What's up docker labels (https://getwud.github.io/wud/#/)
+      # yes I know... I don't need diun and WUD running at the same time. 
+      #   If you do not want diun, then comment out this entire service.
+      - 'wud.tag.include=^\d+\.\d+\.\d+$$'
+      - 'wud.link.template=https://github.com/crazy-max/diun/releases/'
 
   # *****************************************************************************
   # glances
@@ -55,7 +60,7 @@ services:
   #
   # *****************************************************************************
   glances:
-    image: nicolargo/glances:4.3.3
+    image: nicolargo/glances:4.4.1
     restart: always
     container_name: glances
     pid: host
@@ -65,11 +70,20 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/os-release:/etc/os-release:ro
+      - /mnt/hdd1:/mnt/hdd1:ro
+      - /mnt/hdd2:/mnt/hdd2:ro
+      - /mnt/hdd3:/mnt/hdd3:ro
+      - /mnt/hdd4:/mnt/hdd4:ro
+      - /:/hostroot:ro      
       # This is our custom glances.conf file on the docker host server
       # !! This file must exist for this container to start successfully !!
       - /config/glances/glances.conf:/etc/glances/glances.conf
     environment:
       - "GLANCES_OPT=-w"
+    labels:
+      # What's up docker labels (https://getwud.github.io/wud/#/)
+      - 'wud.tag.include=^\d+\.\d+\.\d+$$'
+      - 'wud.link.template=https://github.com/nicolargo/glances/releases'
 
 
   # *****************************************************************************
@@ -84,7 +98,7 @@ services:
   #
   # *****************************************************************************
   socket-proxy:
-    image: lscr.io/linuxserver/socket-proxy:3.2.6
+    image: linuxserver/socket-proxy:3.2.8
     container_name: socket-proxy
     read_only: true
     tmpfs:
@@ -104,6 +118,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: unless-stopped
     network_mode: host
+    labels:
+      # What's up docker labels (https://getwud.github.io/wud/#/)
+      - 'wud.tag.include=^\d+\.\d+\.\d+$$'
+      - 'wud.link.template=https://github.com/linuxserver/docker-socket-proxy/releases'
+
 
 volumes:
   data:
