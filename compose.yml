@@ -35,7 +35,7 @@ services:
       - "GLANCES_OPT=-w"
     labels:
       # What's up docker labels (https://getwud.github.io/wud/#/)
-      - 'wud.tag.include=^\d+\.\d+\.\d+$$'
+      - 'wud.tag.include=^\d+\.\d+\.\d+$'
       - 'wud.link.template=https://github.com/nicolargo/glances/releases'
 
 
@@ -73,7 +73,7 @@ services:
     network_mode: host
     labels:
       # What's up docker labels (https://getwud.github.io/wud/#/)
-      - 'wud.tag.include=^\d+\.\d+\.\d+$$'
+      - 'wud.tag.include=^\d+\.\d+\.\d+$'
       - 'wud.link.template=https://github.com/linuxserver/docker-socket-proxy/releases'
 
 
