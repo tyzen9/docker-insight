@@ -1,10 +1,9 @@
 # <img src="docs/images/t9Logo.png" height="25"> Tyzen9 - docker-insight
-This all-in-one Docker stack combines Glances, DIUN, and socket-proxy to deliver comprehensive insight into your Docker host’s health, provide timely Docker image update notifications, and enforce controlled, secure access to the Docker API via a hardened socket proxy. Together, these containers form the foundation of a robust monitoring solution built on industry-standard, open-source technologies.
+This all-in-one Docker stack combines Glances and socket-proxy to deliver comprehensive insight into your Docker host’s health and enforce controlled, secure access to the Docker API via a hardened socket proxy. Together, these containers form the foundation of a robust monitoring solution built on industry-standard, open-source technologies.
 
-This stack enables strong security and performance monitoring by restricting Docker socket access to necessary services, continuously tracking system and container metrics, and alerting you when updates are available—ensuring your Docker environment remains both secure and up-to-date.
+This stack enables strong security and performance monitoring by restricting Docker socket access to necessary services, an continuously tracking system and container metrics.
 
 <p align="center">
-<img src="docs/images/diun_logo.png" height="80">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <img src="docs/images/glances-logo.png" height="80">
 </p> 
 
@@ -18,7 +17,6 @@ The full list of config options are documented on:
 # What's Inside?
 The docker-insight stack contains everything you need for a robust docker host and container monitoring solution. Here is what this project has to offer:
 
-1. [Diun](https://crazymax.dev/diun)
 1. [Glances](https://glances.readthedocs.io/en/latest/docker.html)
 1. [Socket-Proxy](https://github.com/linuxserver/docker-socket-proxy)
 
@@ -36,30 +34,7 @@ docker compose up
 If everything works as expected, you should be able to access Glances at http://hostname:61208.
 
 > [!NOTE]
->This documentation assumes you have a working knowledge of [Docker](https://www.docker.com/), [Diun](https://crazymax.dev/diun/), and [Glances](https://glances.readthedocs.io/en/latest/) and [Socket-Proxy](https://github.com/linuxserver/docker-socket-proxy).
-
-# Duin 
-Diun (Docker Image Update Notifier) is a lightweight, self-hosted service 
-that monitors your Docker images and sends notifications whenever updates 
-are available. It helps keep environments secure and up to date by 
-integrating with registries and notification providers such as email, 
-Slack, Gotify, and more. Designed to run alongside your Docker services, 
-Diun ensures you are always aware of new image versions so you can quickly 
-apply updates while maintaining control of your deployment lifecycle.
-
-> [!Note]
-> `Duin` can be configured any number of ways. Please review the [Diun](https://crazymax.dev/diun) documentation for details.
-
-
-## Pushover Configuration
-If plans are to use Diun to send [Pushover](https://pushover.net/) notifications, then be sure to set the `DIUN_NOTIF_PUSHOVER_TOKEN` and `DIUN_NOTIF_PUSHOVER_RECIPIENT` keys appropriately when deploying this container.
-
-### Testing Pushover Notifications
-Test the configured notification by running this command on the docker host machine:
-
-```
-docker exec [container-name] diun notif test
-```
+>This documentation assumes you have a working knowledge of [Docker](https://www.docker.com/), [Glances](https://glances.readthedocs.io/en/latest/) and [Socket-Proxy](https://github.com/linuxserver/docker-socket-proxy).
 
 # Glances
 Glances is a cross-platform, real-time system monitoring tool that provides 

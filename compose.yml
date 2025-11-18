@@ -1,53 +1,6 @@
 name: insight
 
-# *****************************************************************************
-# diun
-#   Diun (Docker Image Update Notifier) is a lightweight, self-hosted service 
-#   that monitors your Docker images and sends notifications whenever updates 
-#   are available. It helps keep environments secure and up to date by 
-#   integrating with registries and notification providers such as email, 
-#   Slack, Gotify, and more. Designed to run alongside your Docker services, 
-#   Diun ensures you are always aware of new image versions so you can quickly 
-#   apply updates while maintaining control of your deployment lifecycle.
-#
-# *****************************************************************************
 services:
-  diun:
-    image: crazymax/diun:4.30.0
-    container_name: diun
-    command: serve
-    volumes:
-      - data:/data
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - TZ=${TZ_ID}
-      - LOG_LEVEL=info
-      - LOG_JSON=false
-      - DIUN_WATCH_WORKERS=20
-      - DIUN_WATCH_SCHEDULE=0 */6 * * *
-      - DIUN_WATCH_JITTER=30s
-      - DIUN_PROVIDERS_DOCKER=true
-      - DIUN_PROVIDERS_DOCKER_WATCHBYDEFAULT=true
-      # Pushover configuration (comment-out/remove if not needed)
-      - DIUN_NOTIF_PUSHOVER_TOKEN=${DUIN_PUSHOVER_APP_API_TOKEN}
-      - DIUN_NOTIF_PUSHOVER_RECIPIENT=${DUIN_PUSHOVER_USER_KEY}
-      - DIUN_NOTIF_PUSHOVER_PRIORITY=0
-      # MQTT configuration (comment-out/remove if not needed)
-      - DIUN_NOTIF_MQTT_HOST=${MQTT_HOST}
-      - DIUN_NOTIF_MQTT_PORT=${MQTT_PORT:-1883}
-      - DIUN_NOTIF_MQTT_USERNAME=${MQTT_USERNAME}  # If needded
-      - DIUN_NOTIF_MQTT_PASSWORD=${MQTT_PASSWORD}  # If needed
-      - DIUN_NOTIF_MQTT_TOPIC=diun/${MQTT_CLIENTID}/notify
-      - DIUN_NOTIF_MQTT_CLIENT=${MQTT_CLIENTID}
-      - DIUN_NOTIF_MQTT_QOS=${MQTT_QOS}
-    restart: always
-    labels:
-      # What's up docker labels (https://getwud.github.io/wud/#/)
-      # yes I know... I don't need diun and WUD running at the same time. 
-      #   If you do not want diun, then comment out this entire service.
-      - 'wud.tag.include=^\d+\.\d+\.\d+$$'
-      - 'wud.link.template=https://github.com/crazy-max/diun/releases/'
-
   # *****************************************************************************
   # glances
   #   Glances is a cross-platform, real-time system monitoring tool that provides 
@@ -60,7 +13,7 @@ services:
   #
   # *****************************************************************************
   glances:
-    image: nicolargo/glances:4.4.1
+    image: nicolargo/glances:${TAG_GLANCES:-latest}
     restart: always
     container_name: glances
     pid: host
@@ -98,7 +51,7 @@ services:
   #
   # *****************************************************************************
   socket-proxy:
-    image: linuxserver/socket-proxy:3.2.8
+    image: linuxserver/socket-proxy:${TAG_SOCKETPROXY:-latest}
     container_name: socket-proxy
     read_only: true
     tmpfs:
